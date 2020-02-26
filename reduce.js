@@ -2,19 +2,28 @@ const Big = require( "big.js" );
 
 Big.DP = 2000;
 
+//const basesToCheck = [ 9, 8, 7, 6, 5, 4, 3, 2];
+const basesToCheck = [ 2 ];
+
 const numToReduce = Big( process.argv[2] );
 
+const mergeFormula = ( str ) => {
+	//console.log( "This is mergeFormula; I have str of " );
+	//console.log( str );
+	return str;
+};
+
 const reduce = ( running, str ) => {
-	console.log( "This is reduce; I have running of " );
-	console.log( running.toFixed() );
-	console.log( "And I have str of " );
-	console.log( str );
+
+	if( str !== "" ){
+		console.log( running.toFixed().length + " digits and " + str );
+	}
 
 	if( running.toPrecision().length < 10 ){
-		return "+"+str+";";
+		return str+"+"+running.toFixed()+";";
 	}else{
 
-		const best = [ 2, 3, 5, 6, 7, 8, 9 ].reverse().map( ( baseNum ) => {
+		const best = basesToCheck.map( ( baseNum ) => {
 
 			//console.log( "Testing base " + baseNum );
 
@@ -33,7 +42,7 @@ const reduce = ( running, str ) => {
 
 			const _new = running.minus( Big( baseNum ).pow( currentHighestExp ) );
 
-			strToUse = str + baseNum + "^10e" + currentHighestExp.toFixed() + ";";
+			strToUse = str + baseNum + "^" + currentHighestExp.toFixed() + ";";
 
 			return { baseNum, _new, strToUse };
 		} ).reduce( ( best, c ) => {
@@ -50,10 +59,12 @@ const reduce = ( running, str ) => {
 			return best;
 		}, null );
 
-		//str = str + best.strToUse;
+		// Let's go ahead and mangle the str to remove any duplicate
+		// bases that exist
+		const realStrToUse = mergeFormula( best.strToUse )
 
 		if( best._new.s > 0 ){
-			return reduce( best._new, best.strToUse );
+			return reduce( best._new, realStrToUse);
 		}else{
 			console.log( "This should never happen." );
 		}
