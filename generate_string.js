@@ -1,6 +1,6 @@
 const dictionary = require( "./dictionary" );
 
-const lengthToGenerate = 5; 
+const lengthToGenerate = 100; 
 
 const randomInDict = ( ) => {
 	const min = 0;
